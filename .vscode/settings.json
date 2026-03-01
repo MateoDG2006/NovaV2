@@ -5,7 +5,7 @@
         "source.organizeImports": "explicit"
     },
     "extensions.autoUpdate": false,
-    "python.languageServer": "Jedi",
+    "python.languageServer": "None",
     "python.intelliCode.enabled": false,
     "python.analysis.autoImportCompletions": true,
     "python.analysis.completeFunctionParens": true
