@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat con Ollama</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        #chat { border: 1px solid #ccc; padding: 1rem; height: 400px; overflow-y: auto; }
+        .message { margin-bottom: 1rem; }
+        .user { font-weight: bold; }
+        .bot { color: blue; }
+        #inputForm { margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <h1>Chat con Ollama</h1>
+    <div id="chat"></div>
+
+    <form id="inputForm">
+        <input type="text" id="msgInput" placeholder="Escribe tu mensaje..." autocomplete="off" style="width: 80%;" />
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+    async function sendMessage(content) {
+        const resp = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content })
+        });
+        return resp.json();
+    }
+
+    document.getElementById('inputForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = document.getElementById('msgInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        // append user message
+        const chat = document.getElementById('chat');
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user';
+        userDiv.textContent = text;
+        chat.appendChild(userDiv);
+        chat.scrollTop = chat.scrollHeight;
+
+        input.value = '';
+
+        // send to server
+        const data = await sendMessage(text);
+        const botDiv = document.createElement('div');
+        botDiv.className = 'message bot';
+        botDiv.textContent = data.response || 'Sin respuesta';
+        chat.appendChild(botDiv);
+        chat.scrollTop = chat.scrollHeight;
+    });
+    </script>
+</body>
+</html>
